@@ -2,7 +2,6 @@ import { Router } from 'express';
 import {
   changeCurrentPassword,
   changeEmail,
-  changeFullName,
   changeUserName,
   getCurrentUser,
   loginUser,
@@ -29,8 +28,6 @@ router.route('/update-password').post(verifyJwt, changeCurrentPassword);
 router.route('/get-user').get(verifyJwt, getCurrentUser);
 
 router.route('/update-account-info').patch(verifyJwt, updateAccountDetails);
-
-router.route('/update-name').patch(verifyJwt, changeFullName);
 
 router.route('/update-username').patch(verifyJwt, changeUserName);
 

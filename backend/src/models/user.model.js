@@ -7,26 +7,21 @@ const userSchema = new Schema(
     userName: {
       type: String,
       required: [true, 'user name is required'],
-      unique: true,
-      lowercase: true,
+      unique: [true, 'user name must be unique'],
+      lowercase: [true, 'user name must be lowercase'],
       trim: true,
       index: true, // for optimized search but don't overuse
     },
     email: {
       type: String,
       required: [true, 'email is required'],
-      unique: true,
-      lowercase: true,
+      unique: [true, 'email must be unique'],
+      lowercase: [true, 'email must be lowercase'],
       trim: true,
     },
     password: {
       type: String,
       required: [true, 'password is required'],
-    },
-    fullName: {
-      type: String,
-      required: true,
-      trim: true,
     },
     refreshToken: {
       type: String,
@@ -52,7 +47,6 @@ userSchema.methods.generateAccessToken = function () {
       _id: this._id,
       userName: this.userName,
       email: this.email,
-      fullName: this.fullName,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {

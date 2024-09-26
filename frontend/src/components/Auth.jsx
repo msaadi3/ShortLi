@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { User, Lock, Mail } from 'lucide-react';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const res = await fetch('http://localhost:3000/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Setting the type of data being sent
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
+
+    const data = await res.json(); // Parse the JSON response
+
+    if (res.ok) {
+      console.log('Signup successful:', data);
+    } else {
+      console.error('Signup failed:', data.message);
+    }
     console.log(isLogin ? 'Logging in...' : 'Signing up...', {
       email,
       password,

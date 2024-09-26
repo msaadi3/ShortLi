@@ -11,14 +11,13 @@ const UrlSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    //   user: {
-    //     type: mongoose.ObjectId,
-    //     ref: User,
-    //   },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
     visitHistory: [
       {
         timeStamp: { type: String },
-        // ip: { type: String },
       },
     ],
   },

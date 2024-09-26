@@ -1,26 +1,18 @@
-import { asyncHandler } from '../lib/asyncHandler.js';
 import { ApiError } from '../lib/ApiError.js';
 import { ApiResponse } from '../lib/ApiResponse.js';
 import { User } from '../models/user.model.js';
 import Jwt from 'jsonwebtoken';
 
-const registerUser = asyncHandler(async (req, res) => {
-  // get user details from frontend and perform checks
-  // handle media files using multer middleware in route file
-  // get the local path of avatar and cover image perform checks and upload them on cloudinary and perform checks
-  // create user in database perform checks and return the appropriate response
+const registerUser = async (req, res) => {
+  const { userName, email, password } = req.body;
 
-  const { userName, fullName, email, password } = req.body;
-
-  if (
-    [fullName, userName, email, password].some((field) => field?.trim() === '')
-  ) {
+  if ([userName, email, password].some((field) => field?.trim() === '')) {
     throw new ApiError(400, 'Please fill all fields');
   }
 
   // console.log(req.body);
 
-  // if (userName || fullName || email || password === '') {
+  // if (userName || || email || password === '') {
   //     throw new ApiError(400, 'Please fill all fields')
   // }
 
@@ -33,7 +25,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.create({
-    fullName,
     email,
     password,
     userName: userName.toLowerCase(),
@@ -50,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(new ApiResponse(200, 'User created successfully', createdUser));
-});
+};
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -69,13 +60,7 @@ const generateAccessAndRefreshToken = async (userId) => {
   }
 };
 
-const loginUser = asyncHandler(async (req, res) => {
-  // userName or email and password -> req.body
-  // find the user
-  // if user found check password
-  // generate access and refresh token, save refresh token in database
-  // send access and refresh token to user in secure cookies
-
+const loginUser = async (req, res) => {
   const { userName, email, password } = req.body;
 
   if (!(userName || email)) {
@@ -125,9 +110,9 @@ const loginUser = asyncHandler(async (req, res) => {
         // { user: loggedInUser, accessToken, refreshToken }
       )
     );
-});
+};
 
-const logoutUser = asyncHandler(async (req, res) => {
+const logoutUser = async (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     {
@@ -150,9 +135,9 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie('accessToken', cookiesOptions)
     .clearCookie('refreshToken', cookiesOptions)
     .json(new ApiResponse(200, 'user logged out', {}));
-});
+};
 
-const refreshAccessToken = asyncHandler(async (req, res) => {
+const refreshAccessToken = async (req, res) => {
   const userRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
   if (!userRefreshToken) {
@@ -199,9 +184,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       error?.message || 'something went wrong while refreshing access token'
     );
   }
-});
+};
 
-const changeCurrentPassword = asyncHandler(async (req, res) => {
+const changeCurrentPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const user = await User.findById(req.user?._id);
 
@@ -217,9 +202,9 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, 'password changed successfully'));
-});
+};
 
-const getCurrentUser = asyncHandler(async (req, res) => {
+const getCurrentUser = async (req, res) => {
   return res
     .status(200)
     .json(
@@ -229,13 +214,13 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         req.user
       )
     );
-});
+};
 
-const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { userName, fullName, email } = req.body;
+const updateAccountDetails = async (req, res) => {
+  const { userName, email } = req.body;
   const user = await User.findById(req.user?._id);
 
-  if (!(userName || fullName || email)) {
+  if (!(userName || email)) {
     throw new ApiError(401, 'Please fill in the fiels you want to update');
   }
 
@@ -244,7 +229,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     {
       $set: {
         userName: userName || user.userName,
-        fullName: fullName || user.fullName,
         email: email || user.email,
       },
     },
@@ -258,32 +242,9 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, 'account details updated successfully', updatedUser)
     );
-});
+};
 
-const changeFullName = asyncHandler(async (req, res) => {
-  const { fullName } = req.body;
-
-  if (!fullName) {
-    throw new ApiError(401, 'fullName is required');
-  }
-
-  const updatedUser = User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      fullName,
-      // fullName:fullName
-    },
-    {
-      new: true,
-    }
-  ).select('-password');
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, 'full name updated successfully', updatedUser));
-});
-
-const changeUserName = asyncHandler(async (req, res) => {
+const changeUserName = async (req, res) => {
   const { userName } = req.body;
 
   if (!userName) {
@@ -303,9 +264,9 @@ const changeUserName = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, 'user name updated successfully', updatedUser));
-});
+};
 
-const changeEmail = asyncHandler(async (req, res) => {
+const changeEmail = async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -325,7 +286,7 @@ const changeEmail = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, 'email updated successfully', updatedUser));
-});
+};
 
 export {
   registerUser,
@@ -335,7 +296,6 @@ export {
   changeCurrentPassword,
   getCurrentUser,
   updateAccountDetails,
-  changeFullName,
   changeUserName,
   changeEmail,
 };

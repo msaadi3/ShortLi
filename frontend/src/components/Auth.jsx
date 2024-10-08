@@ -1,64 +1,88 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { User, Lock, Mail } from 'lucide-react';
-
+import UserContext from '../context/UserContext.js';
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState();
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const {
+    isLoginPage,
+    setIsLoginPage,
+    setIsLogin,
+    isLogin,
+    email,
+    setEmail,
+    userName,
+    setUserName,
+  } = useContext(UserContext);
 
+  // Log isLogin whenever it changes
+  useEffect(() => {
+    console.log('isLogin updated:', isLogin);
+  }, [isLogin]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:3000/user/register', {
+    const authEndPoint = `http://localhost:3000/user/${
+      isLoginPage ? 'login' : 'register'
+    }`;
+
+    const body = isLoginPage
+      ? { email, password }
+      : { userName, email, password };
+
+    const res = await fetch(authEndPoint, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json', // Setting the type of data being sent
       },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
+      body: JSON.stringify(body),
     });
 
     const data = await res.json(); // Parse the JSON response
+    console.log(data);
 
     if (res.ok) {
-      console.log('Signup successful:', data);
+      console.log(
+        `${isLoginPage ? 'Logged in' : 'Signed up'} successfully`,
+        data
+      );
+      if (isLoginPage) {
+        setIsLogin(true);
+      }
     } else {
-      console.error('Signup failed:', data.message);
+      console.log(`${isLoginPage ? 'Login failed' : 'Signup failed'}`, data);
+      return;
     }
-    console.log(isLogin ? 'Logging in...' : 'Signing up...', {
-      email,
-      password,
-      username,
-    });
+
+    // if (isLoginPage && res.ok) {
+    //   setIsLogin(true);
+    // }
+    // console.log(isLogin);
   };
 
   return (
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-blue-500 px-4'>
       <div className='bg-white p-6 md:p-8 rounded-lg shadow-md w-full max-w-md'>
         <h2 className='text-xl md:text-2xl font-bold mb-6 text-center text-purple-600'>
-          {isLogin ? 'Login to ShortLi' : 'Sign Up for ShortLi'}
+          {isLoginPage ? 'Login to ShortLi' : 'Sign Up for ShortLi'}
         </h2>
         <form onSubmit={handleSubmit}>
-          {!isLogin && (
+          {!isLoginPage && (
             <div className='mb-4'>
               <label
                 className='block text-gray-700 text-sm font-bold mb-2'
-                htmlFor='username'
+                htmlFor='userName'
               >
-                Username
+                UserName
               </label>
               <div className='relative'>
                 <input
                   className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pl-10'
-                  id='username'
+                  id='userName'
                   type='text'
-                  placeholder='Username'
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder='UserName'
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
                   required
                 />
                 <User className='absolute left-3 top-2.5 h-5 w-5 text-gray-400' />
@@ -110,16 +134,16 @@ const Auth = () => {
               className='bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full'
               type='submit'
             >
-              {isLogin ? 'Login' : 'Sign Up'}
+              {isLoginPage ? 'Login' : 'Sign Up'}
             </button>
           </div>
         </form>
         <div className='text-center mt-4'>
           <button
             className='text-purple-600 hover:text-purple-800 text-sm'
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => setIsLoginPage(!isLoginPage)}
           >
-            {isLogin
+            {isLoginPage
               ? "Don't have an account? Sign Up"
               : 'Already have an account? Login'}
           </button>

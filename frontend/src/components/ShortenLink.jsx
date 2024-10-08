@@ -19,6 +19,7 @@ const ShortenLink = () => {
     try {
       const res = await fetch('http://localhost:3000/url', {
         method: 'POST',
+        credentials: 'include', // This sends cookies with the request
         headers: {
           'Content-Type': 'application/json',
         },

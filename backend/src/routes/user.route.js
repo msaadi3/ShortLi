@@ -1,36 +1,30 @@
 import { Router } from 'express';
 import {
   changeCurrentPassword,
-  changeEmail,
-  changeUserName,
-  getCurrentUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
   registerUser,
   updateAccountDetails,
+  deleteAccount,
 } from '../controllers/user.controller.js';
 import { verifyJwt } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
-router.route('/register').post(registerUser);
+router.post('/register', registerUser);
 
-router.route('/login').post(loginUser);
+router.post('/login', loginUser);
 
 // secured routes
-router.route('/logout').post(verifyJwt, logoutUser);
+router.post('/logout', verifyJwt, logoutUser);
 
-router.route('/refresh-accessToken').post(refreshAccessToken);
+router.post('/refresh-accessToken', refreshAccessToken);
 
-router.route('/update-password').post(verifyJwt, changeCurrentPassword);
+router.post('/update-password', verifyJwt, changeCurrentPassword);
 
-router.route('/get-user').get(verifyJwt, getCurrentUser);
+router.patch('/update-account-info', verifyJwt, updateAccountDetails);
 
-router.route('/update-account-info').patch(verifyJwt, updateAccountDetails);
-
-router.route('/update-username').patch(verifyJwt, changeUserName);
-
-router.route('/update-email').patch(verifyJwt, changeEmail);
+router.delete('/delete-account', verifyJwt, deleteAccount);
 
 export default router;

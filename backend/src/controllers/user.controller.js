@@ -12,7 +12,7 @@ const registerUser = async (req, res) => {
 
   // console.log(req.body);
 
-  // if (userName || || email || password === '') {
+  // if (userName || email || password === '') {
   //     throw new ApiError(400, 'Please fill all fields')
   // }
 
@@ -27,7 +27,8 @@ const registerUser = async (req, res) => {
   const user = await User.create({
     email,
     password,
-    userName: userName.toLowerCase(),
+    userName,
+    // userName: userName.toLowerCase,
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -91,7 +92,9 @@ const loginUser = async (req, res) => {
 
   const cookiesOptions = {
     httpOnly: true,
-    secure: true,
+    // secure: true,
+    sameSite: 'lax',
+    path: '/', // Ensure the cookie is valid across the entire site
   };
 
   return res
@@ -99,16 +102,11 @@ const loginUser = async (req, res) => {
     .cookie('accessToken', accessToken, cookiesOptions)
     .cookie('refreshToken', refreshToken, cookiesOptions)
     .json(
-      new ApiResponse(
-        200,
-        'user logged in successfully',
-        {
-          user: loggedInUser,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        }
-        // { user: loggedInUser, accessToken, refreshToken }
-      )
+      new ApiResponse(200, 'user logged in successfully', {
+        user: loggedInUser,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      })
     );
 };
 
@@ -127,7 +125,9 @@ const logoutUser = async (req, res) => {
 
   const cookiesOptions = {
     httpOnly: true,
-    secure: true,
+    // secure: true,
+    sameSite: 'lax',
+    path: '/', // Ensure the cookie is valid across the entire site
   };
 
   return res
@@ -165,7 +165,9 @@ const refreshAccessToken = async (req, res) => {
 
     const cookiesOptions = {
       httpOnly: true,
-      secure: true,
+      // secure: true,
+      sameSite: 'lax',
+      path: '/', // Ensure the cookie is valid across the entire site
     };
 
     return res
@@ -204,18 +206,6 @@ const changeCurrentPassword = async (req, res) => {
     .json(new ApiResponse(200, 'password changed successfully'));
 };
 
-const getCurrentUser = async (req, res) => {
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        'fetched current user details successfully',
-        req.user
-      )
-    );
-};
-
 const updateAccountDetails = async (req, res) => {
   const { userName, email } = req.body;
   const user = await User.findById(req.user?._id);
@@ -244,48 +234,30 @@ const updateAccountDetails = async (req, res) => {
     );
 };
 
-const changeUserName = async (req, res) => {
-  const { userName } = req.body;
+const deleteAccount = async (req, res) => {
+  const userId = req.user?._id;
 
-  if (!userName) {
-    throw new ApiError(401, 'user name is required');
+  const findUserAndDelete = await User.findByIdAndDelete(userId);
+
+  if (!findUserAndDelete) {
+    throw new ApiError(
+      401,
+      'User not found or something went wrong while deleting user'
+    );
   }
 
-  const updatedUser = User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      userName,
-    },
-    {
-      new: true,
-    }
-  ).select('-password');
+  const cookiesOptions = {
+    httpOnly: true,
+    // secure: true,
+    sameSite: 'lax',
+    path: '/', // Ensure the cookie is valid across the entire site
+  };
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 'user name updated successfully', updatedUser));
-};
-
-const changeEmail = async (req, res) => {
-  const { email } = req.body;
-
-  if (!email) {
-    throw new ApiError(401, 'email is required');
-  }
-
-  const updatedUser = User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      email,
-    },
-    {
-      new: true,
-    }
-  ).select('-password');
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, 'email updated successfully', updatedUser));
+    .clearCookie('accessToken', cookiesOptions)
+    .clearCookie('refreshToken', cookiesOptions)
+    .json(new ApiResponse(200, 'account deleted successfully', {}));
 };
 
 export {
@@ -294,8 +266,6 @@ export {
   logoutUser,
   refreshAccessToken,
   changeCurrentPassword,
-  getCurrentUser,
   updateAccountDetails,
-  changeUserName,
-  changeEmail,
+  deleteAccount,
 };

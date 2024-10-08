@@ -16,9 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: '*',
-    // origin: process.env.CORS_ORIGIN,
-    credentials: true,
+    origin: process.env.CORS_ORIGIN,
+    credentials: true, // Allow credentials (cookies)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   })
 );

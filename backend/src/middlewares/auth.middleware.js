@@ -4,8 +4,8 @@ import Jwt from 'jsonwebtoken';
 
 export const verifyJwt = async (
   req,
-  _ /**_ instead of res cuz res is of no use here thatswhy put _ here  */,
   // res,
+  _ /**_ instead of res cuz res is of no use here thatswhy put _ here  */,
   next
 ) => {
   try {
@@ -15,6 +15,7 @@ export const verifyJwt = async (
 
     if (!token) {
       throw new ApiError(401, 'Unauthorized request');
+      // return res.redirect('http://localhost:5173/auth');
       // new ApiError(401, 'Unauthorized request');
       // return res.redirect('/auth');
     }
@@ -24,7 +25,7 @@ export const verifyJwt = async (
       process.env.ACCESS_TOKEN_SECRET
     );
 
-    const user = User.findById(decodedToken?._id).select(
+    const user = await User.findById(decodedToken?._id).select(
       '-password -refreshToken'
     );
 
@@ -38,10 +39,13 @@ export const verifyJwt = async (
 
     next();
   } catch (error) {
-    throw new ApiError(
-      401,
-      `something went wrong in verifyJwt() function: ${error.message}`
-    );
+    // throw new ApiError(
+    //   401,
+    //   `something went wrong in verifyJwt() function: ${error.message}`
+    // );
     // throw new ApiError(401, error?.message || 'something went wrong in verifyJwt() function')
+    next(
+      new ApiError(401, `Something went wrong in verifyJwt: ${error.message}`)
+    );
   }
 };

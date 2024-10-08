@@ -1,10 +1,25 @@
 import { ArrowRight, Zap, Shield, BarChart } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import UserProfileMenu from './UserProfileMenu.jsx';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import UserContext from '../context/UserContext.js';
 const LandingPage = () => {
+  const { isLogin } = useContext(UserContext);
+  const navigate = useNavigate();
+  const handleGetStarted = () => {
+    if (isLogin) {
+      navigate('/url');
+    } else {
+      navigate('/auth');
+    }
+  };
   return (
     <div className='min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 text-white'>
       <header className='container mx-auto px-4 py-6 flex justify-between items-center'>
-        <div className='text-2xl font-bold'>ShortLi</div>
+        <div className='flex items-center'>
+          <div className='text-2xl font-bold mr-4'>ShortLi</div>{' '}
+        </div>
+        <UserProfileMenu />
       </header>
 
       <main className='container mx-auto px-4 py-12 md:py-20'>
@@ -15,11 +30,12 @@ const LandingPage = () => {
           <p className='text-lg md:text-xl mb-8'>
             Create short, memorable links in seconds with ShortLi
           </p>
-          <NavLink to='/url'>
-            <button className='bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition-colors inline-flex items-center'>
-              Get Started <ArrowRight className='ml-2' />
-            </button>
-          </NavLink>
+          <button
+            onClick={handleGetStarted}
+            className='bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition-colors inline-flex items-center'
+          >
+            Get Started <ArrowRight className='ml-2' />
+          </button>
         </div>
 
         <div id='features' className='mt-20 md:mt-32'>

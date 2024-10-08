@@ -16,7 +16,8 @@ export const handleShortId = async (req, res) => {
     shortId: shortId,
     originalUrl: url,
     visitHistory: [],
-    // user: req.user.email,
+    // user: req._id,
+    // user:req.email
   });
 
   return res

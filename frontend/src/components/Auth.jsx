@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { User, Lock, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../store/userStore.js';
+import { toast } from 'react-toastify';
 const Auth = () => {
   const [password, setPassword] = useState('');
   const {
@@ -38,10 +39,7 @@ const Auth = () => {
     const data = await res.json();
 
     if (res.ok) {
-      console.log(
-        `${isLoginPage ? 'Logged in' : 'Signed up'} successfully`,
-        data
-      );
+      toast.success(`${isLoginPage ? 'Logged in' : 'Signed up'} successfully`);
       if (isLoginPage) {
         setIsLogin(true);
         setUserName(data.data.user.userName);
@@ -49,7 +47,7 @@ const Auth = () => {
         navigate('/url');
       }
     } else {
-      console.log(`${isLoginPage ? 'Login failed' : 'Signup failed'}`);
+      toast.error(`${isLoginPage ? 'Login failed' : 'Signup failed'}`);
       return;
     }
   };

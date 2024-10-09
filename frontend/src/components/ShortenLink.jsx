@@ -1,25 +1,24 @@
 import { useState } from 'react';
 import { Link, Copy, CheckCircle } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const ShortenLink = () => {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
-  // const [error, setError] = useState('');
   const [isCopied, setIsCopied] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!longUrl) {
-      console.log('url is required');
+      toast.error('url is required');
       return;
-      // setError('url is required');
     }
 
     try {
       const res = await fetch('http://localhost:3000/url', {
         method: 'POST',
-        credentials: 'include', // This sends cookies with the request
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -27,18 +26,15 @@ const ShortenLink = () => {
       });
 
       const data = await res.json();
-      // console.log(data);
 
       if (res.ok) {
         setShortUrl(`http://localhost:3000/${data.data.shortId}`);
       } else {
-        console.log('something went wrong while shortening the URL');
-
-        // setError('something went wrong while shortening the URL');
+        toast.error('something went wrong while shortening the URL');
       }
     } catch (error) {
-      // setError(error);
       console.log('something went wrong while shortening the URL', error);
+      toast.error('something went wrong while shortening the URL');
     }
   };
 

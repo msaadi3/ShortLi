@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../store/userStore.js';
+import { toast } from 'react-toastify';
 const Profile = () => {
   const {
     userName,
@@ -20,7 +21,7 @@ const Profile = () => {
     e.preventDefault();
 
     if (newPassword !== confirmNewPassword) {
-      console.log('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     const body = { oldPassword, newPassword };
@@ -34,13 +35,13 @@ const Profile = () => {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     if (res.ok) {
-      console.log('password updated successfully', data);
       logout(navigate);
+      toast.success('password updated successfully');
     } else {
-      console.log('something went wrong while updating password');
+      toast.error('something went wrong while updating password');
     }
   };
   const handleDeleteAccount = async () => {
@@ -56,17 +57,17 @@ const Profile = () => {
           'Content-Type': 'application/json',
         },
       });
-      const data = await res.json();
+      // const data = await res.json();
       if (res.ok) {
         setIsLogin(false);
         setIsLoginPage(false);
         setEmail('');
         setUserName('');
         useUserStore.persist.clearStorage();
-        console.log('account deleted successfully', data);
+        toast.success('account deleted successfully');
         navigate('/');
       } else {
-        console.log('something went wrong while deleting account');
+        toast.error('something went wrong while deleting account');
       }
     }
   };
@@ -84,12 +85,12 @@ const Profile = () => {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     if (res.ok) {
-      console.log('userName updated successfully', data);
+      toast.success('userName updated successfully');
     } else {
-      console.log('something went wrong while updating userName');
+      toast.error('something went wrong while updating userName');
     }
   };
 
@@ -106,12 +107,12 @@ const Profile = () => {
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     if (res.ok) {
-      console.log('email updated successfully', data);
+      toast.success('email updated successfully');
     } else {
-      console.log('something went wrong while updating email');
+      toast.error('something went wrong while updating email');
     }
   };
   return (

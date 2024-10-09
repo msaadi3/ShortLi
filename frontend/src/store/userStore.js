@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -22,15 +23,15 @@ const useUserStore = create(
           },
         });
 
-        const data = await res.json();
+        // const data = await res.json();
 
         if (res.ok) {
           set({ isLogin: false, isLoginPage: false, email: '', userName: '' });
           useUserStore.persist.clearStorage();
-          console.log('Logged out successfully', data);
           navigate('/auth');
+          toast.success('Logged out successfully');
         } else {
-          console.log('Something went wrong while logging out', data);
+          toast.error('Something went wrong while logging out');
         }
       },
     }),

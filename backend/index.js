@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true, // Allow credentials (cookies)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   })
 );
 

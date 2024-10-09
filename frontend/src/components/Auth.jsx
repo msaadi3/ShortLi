@@ -1,23 +1,20 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState } from 'react';
 import { User, Lock, Mail } from 'lucide-react';
-import UserContext from '../context/UserContext.js';
+import { useNavigate } from 'react-router-dom';
+import useUserStore from '../store/userStore.js';
 const Auth = () => {
   const [password, setPassword] = useState('');
   const {
     isLoginPage,
     setIsLoginPage,
     setIsLogin,
-    isLogin,
     email,
     setEmail,
     userName,
     setUserName,
-  } = useContext(UserContext);
+  } = useUserStore();
 
-  // Log isLogin whenever it changes
-  useEffect(() => {
-    console.log('isLogin updated:', isLogin);
-  }, [isLogin]);
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,13 +30,12 @@ const Auth = () => {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/json', // Setting the type of data being sent
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
 
-    const data = await res.json(); // Parse the JSON response
-    console.log(data);
+    const data = await res.json();
 
     if (res.ok) {
       console.log(
@@ -48,16 +44,14 @@ const Auth = () => {
       );
       if (isLoginPage) {
         setIsLogin(true);
+        setUserName(data.data.user.userName);
+        setIsLoginPage(false);
+        navigate('/url');
       }
     } else {
-      console.log(`${isLoginPage ? 'Login failed' : 'Signup failed'}`, data);
+      console.log(`${isLoginPage ? 'Login failed' : 'Signup failed'}`);
       return;
     }
-
-    // if (isLoginPage && res.ok) {
-    //   setIsLogin(true);
-    // }
-    // console.log(isLogin);
   };
 
   return (

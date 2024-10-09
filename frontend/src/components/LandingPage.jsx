@@ -1,10 +1,9 @@
 import { ArrowRight, Zap, Shield, BarChart } from 'lucide-react';
-import UserProfileMenu from './UserProfileMenu.jsx';
-import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import UserContext from '../context/UserContext.js';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { UserProfileMenu } from './index.js';
+import useUserStore from '../store/userStore.js';
 const LandingPage = () => {
-  const { isLogin } = useContext(UserContext);
+  const { isLogin } = useUserStore();
   const navigate = useNavigate();
   const handleGetStarted = () => {
     if (isLogin) {
@@ -83,9 +82,19 @@ const LandingPage = () => {
                 <ArrowRight size={16} className='mr-2' /> 24/7 support
               </li>
             </ul>
-            <button className='bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors w-full'>
-              Get Started
-            </button>
+            {isLogin ? (
+              <NavLink to='/url'>
+                <button className='bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors w-full'>
+                  Get Started
+                </button>
+              </NavLink>
+            ) : (
+              <NavLink to='/auth'>
+                <button className='bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition-colors w-full'>
+                  Get Started
+                </button>
+              </NavLink>
+            )}
           </div>
         </div>
       </main>
@@ -99,9 +108,11 @@ const LandingPage = () => {
             Join thousands of satisfied users and start shortening your links
             today!
           </p>
-          <button className='bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition-colors'>
-            Sign Up Now
-          </button>
+          <NavLink to='/auth'>
+            <button className='bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-semibold hover:bg-purple-100 transition-colors'>
+              Sign Up Now
+            </button>
+          </NavLink>
           <div className='mt-12'>
             <p>&copy; 2024 ShortLi. All rights reserved.</p>
           </div>

@@ -1,35 +1,17 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { User, BarChart, LogOut } from 'lucide-react';
 import { useNavigate, NavLink } from 'react-router-dom';
-import UserContext from '../context/UserContext.js';
-
+import useUserStore from '../store/userStore.js';
 const UserProfileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { setIsLogin, isLogin, userName } = useContext(UserContext);
+  const { isLogin, userName, logout } = useUserStore();
   const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const handleLogout = async (e) => {
     e.preventDefault();
-
-    const res = await fetch('http://localhost:3000/user/logout', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      console.log('Logged out successfully', data);
-      setIsLogin(false);
-      navigate('/auth'); // Redirect to the login page after logout
-    } else {
-      console.log('Something went wrong while logging out', data);
-    }
+    logout(navigate);
   };
 
   return (
@@ -39,9 +21,14 @@ const UserProfileMenu = () => {
         className='flex items-center space-x-2 text-white focus:outline-none'
       >
         <div className='w-10 h-10 bg-purple-300 rounded-full flex items-center justify-center'>
-          <User className='text-purple-600' />
+          {isLogin ? (
+            <span className='text-lg font-bold text-purple-600'>
+              {userName.charAt(0).toUpperCase()}
+            </span>
+          ) : (
+            <User className='text-purple-600' />
+          )}
         </div>
-        {isLogin && <span>{userName}</span>}
       </button>
 
       {isOpen && (
@@ -55,7 +42,7 @@ const UserProfileMenu = () => {
                 </div>
               </NavLink>
 
-              <NavLink to='/dashboard'>
+              <NavLink to='/analytics-dashboard'>
                 <div className='block px-4 py-2 text-sm text-gray-700 hover:bg-purple-100 flex items-center space-x-2'>
                   <BarChart size={18} />
                   <span>Dashboard</span>

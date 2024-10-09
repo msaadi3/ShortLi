@@ -1,7 +1,11 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { LandingPage, Auth, ShortenLink } from './components/index.js';
-import UserContextProvider from './context/UserContextProvider.jsx';
-import Profile from './components/Profile.jsx';
+import {
+  LandingPage,
+  Auth,
+  ShortenLink,
+  Profile,
+  AnalyticsDashboard,
+} from './components/index.js';
 function App() {
   const router = createBrowserRouter([
     {
@@ -21,15 +25,15 @@ function App() {
       element: <Profile />,
     },
     {
+      path: '/analytics-dashboard',
+      element: <AnalyticsDashboard />,
+    },
+    {
       path: '*',
       element: <h1>404 Not Found</h1>,
     },
   ]);
-  return (
-    <UserContextProvider>
-      <RouterProvider router={router} />
-    </UserContextProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -19,9 +19,11 @@ const Auth = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const authEndPoint = `http://localhost:3000/user/${
-      isLoginPage ? 'login' : 'register'
-    }`;
+    const user = '/user';
+    isLoginPage ? '/login' : '/register';
+    const authEndPoint = `${
+      import.meta.env.VITE_BACKEND_URI
+    }${user}${isLoginPage}`;
 
     const body = isLoginPage
       ? { email, password }

@@ -15,13 +15,17 @@ const useUserStore = create(
       setIsLoginPage: (loginPageStatus) =>
         set({ isLoginPage: loginPageStatus }),
       logout: async (navigate) => {
-        const res = await fetch('http://localhost:3000/user/logout', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const endPoint = '/user/logout';
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URI}${endPoint}`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
         // const data = await res.json();
 

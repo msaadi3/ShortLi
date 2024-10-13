@@ -16,7 +16,8 @@ const ShortenLink = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/url', {
+      const url = '/url';
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}${url}`, {
         method: 'POST',
         credentials: 'include',
         headers: {

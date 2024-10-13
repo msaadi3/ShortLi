@@ -26,7 +26,8 @@ const Profile = () => {
     }
     const body = { oldPassword, newPassword };
 
-    const res = await fetch('http://localhost:3000/user/update-password', {
+    const endPoint = '/user/update-password';
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}${endPoint}`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -50,13 +51,17 @@ const Profile = () => {
         'Are you sure you want to delete your account? This action cannot be undone.'
       )
     ) {
-      const res = await fetch('http://localhost:3000/user/delete-account', {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const endPoint = '/user/delete-account';
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URI}${endPoint}`,
+        {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       // const data = await res.json();
       if (res.ok) {
         setIsLogin(false);
@@ -76,7 +81,8 @@ const Profile = () => {
     e.preventDefault();
 
     const body = { userName };
-    const res = await fetch('http://localhost:3000/user/update-account-info', {
+    const endPoint = '/user/update-account-info';
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}${endPoint}`, {
       method: 'PATCH',
       credentials: 'include',
       headers: {
@@ -98,7 +104,8 @@ const Profile = () => {
     e.preventDefault();
 
     const body = { email };
-    const res = await fetch('http://localhost:3000/user/update-account-info', {
+    const endPoint = '/user/update-account-info';
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URI}${endPoint}`, {
       method: 'PATCH',
       credentials: 'include',
       headers: {

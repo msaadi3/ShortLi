@@ -8,13 +8,17 @@ const AnalyticsDashboard = () => {
   const { isLogin } = useUserStore();
   const fetchUrlsData = async () => {
     try {
-      const res = await fetch('http://localhost:3000/analytics', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const analytics = '/analytics';
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URI}${analytics}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       const data = await res.json();
 

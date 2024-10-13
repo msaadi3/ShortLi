@@ -1,0 +1,13 @@
+{
+  "build": {
+    "commands": [
+      {
+        "command": "cd backend && pnpm install",
+        "name": "Install Backend Dependencies"
+      }
+    ]
+  },
+  "start": {
+    "command": "cd backend && pnpm start"
+  }
+}

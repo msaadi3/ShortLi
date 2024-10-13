@@ -20,10 +20,10 @@ const Auth = () => {
     e.preventDefault();
 
     const user = '/user';
-    isLoginPage ? '/login' : '/register';
-    const authEndPoint = `${
-      import.meta.env.VITE_BACKEND_URI
-    }${user}${isLoginPage}`;
+
+    const authEndPoint = `${import.meta.env.VITE_BACKEND_URI}${user}${
+      isLoginPage ? '/login' : '/register'
+    }`;
 
     const body = isLoginPage
       ? { email, password }

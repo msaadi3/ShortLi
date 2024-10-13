@@ -15,7 +15,6 @@ const connectDB = async () => {
       'error while connecting with database in db/index.js file ',
       error
     );
-    // throw error
     process.exit(1);
   }
 };

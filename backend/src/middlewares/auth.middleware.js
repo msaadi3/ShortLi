@@ -15,9 +15,6 @@ export const verifyJwt = async (
 
     if (!token) {
       throw new ApiError(401, 'Unauthorized request');
-      // return res.redirect('http://localhost:5173/auth');
-      // new ApiError(401, 'Unauthorized request');
-      // return res.redirect('/auth');
     }
 
     const decodedToken = await Jwt.verify(
@@ -31,19 +28,12 @@ export const verifyJwt = async (
 
     if (!user) {
       throw new ApiError(401, 'Invalid access token');
-      // new ApiError(401, 'Invalid access token');
-      // res.redirect('/auth');
     }
 
     req.user = user;
 
     next();
   } catch (error) {
-    // throw new ApiError(
-    //   401,
-    //   `something went wrong in verifyJwt() function: ${error.message}`
-    // );
-    // throw new ApiError(401, error?.message || 'something went wrong in verifyJwt() function')
     next(
       new ApiError(401, `Something went wrong in verifyJwt: ${error.message}`)
     );

@@ -7,5 +7,3 @@ export const generateRandomId = (min, max, length) => {
 
   return randomId;
 };
-
-// console.log(generateRandomId(0, 9, 7));

@@ -92,7 +92,7 @@ const loginUser = async (req, res, next) => {
     const cookiesOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'None',
       path: '/', // Ensure the cookie is valid across the entire site
     };
 
@@ -130,7 +130,7 @@ const logoutUser = async (req, res, next) => {
     const cookiesOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'None',
       path: '/', // Ensure the cookie is valid across the entire site
     };
 
@@ -174,7 +174,7 @@ const refreshAccessToken = async (req, res, next) => {
     const cookiesOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'None',
       path: '/', // Ensure the cookie is valid across the entire site
     };
 
@@ -277,7 +277,7 @@ const deleteAccount = async (req, res, next) => {
     const cookiesOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'lax',
+      sameSite: 'None',
       path: '/', // Ensure the cookie is valid across the entire site
     };
 

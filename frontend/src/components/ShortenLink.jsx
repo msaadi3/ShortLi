@@ -29,9 +29,7 @@ const ShortenLink = () => {
       const data = await res.json();
 
       if (res.ok) {
-        setShortUrl(
-          `${import.meta.env.VITE_BACKEND_URI}:3000/${data.data.shortId}`
-        );
+        setShortUrl(`${import.meta.env.VITE_BACKEND_URI}/${data.data.shortId}`);
       } else {
         toast.error('something went wrong while shortening the URL');
       }

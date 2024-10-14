@@ -11,7 +11,7 @@ export const handleShortId = async (req, res, next) => {
       throw new ApiError(400, 'url is required');
     }
 
-    const shortId = generateRandomId(0, 9, 7);
+    const shortId = generateRandomId(0, 9, 3);
 
     await Url.create({
       shortId: shortId,

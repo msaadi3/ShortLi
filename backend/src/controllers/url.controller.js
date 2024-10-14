@@ -53,7 +53,7 @@ export const handleRedirect = async (req, res, next) => {
 
     await url.save();
 
-    res.redirect(url.originalUrl);
+    res.redirect(301, url.originalUrl);
   } catch (error) {
     next(error);
     // console.log('error while redirecting url', error);

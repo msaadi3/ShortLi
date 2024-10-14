@@ -94,7 +94,7 @@ const AnalyticsDashboard = () => {
                       rel='noopener noreferrer'
                       className='hover:underline'
                     >
-                      {`http://localhost:3000/${url.shortId}`}
+                      {`${import.meta.env.VITE_BACKEND_URI}/${url.shortId}`}
                     </a>
                   </td>
                   <td className='px-6 py-4 text-sm text-purple-700 border-b border-purple-200'>
